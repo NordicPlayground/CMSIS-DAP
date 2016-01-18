@@ -50,7 +50,8 @@ ALGO_START_ADDRESSES = {
     'LPC43xx':      0x10000000,
     'LPC4337':      0x10000000,
     'MKXX':         0x20000000,
-    'NRF51822AA':   0x20000000,
+    'nRF51822AA':   0x20000000,
+    'nRF52':        0x20000000,
 }
 
 class FlashInfo(object):
@@ -109,6 +110,7 @@ class FlashInfo(object):
 
 
 def gen_flash_algo():
+    print [FROMELF, '--bin', ALGO_ELF_PATH, '-o', TMP_DIR_W_TERM]
     run_cmd([FROMELF, '--bin', ALGO_ELF_PATH, '-o', TMP_DIR_W_TERM])
     try:
         flash_info = FlashInfo(DEV_INFO_PATH)
