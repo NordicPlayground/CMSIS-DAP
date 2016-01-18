@@ -65,7 +65,7 @@
 #   define WANTED_SIZE_IN_KB                        (512)
 #elif defined(DBG_LPC11U68)
 #   define WANTED_SIZE_IN_KB                        (256)
-#elif defined(DBG_NRF51822AA)
+#elif defined(DBG_NRF5X)
 #   define WANTED_SIZE_IN_KB                        (1024)
 #elif defined(DBG_LPC4337)
 #   define WANTED_SIZE_IN_KB                        (1024)
@@ -433,7 +433,7 @@ static uint32_t flash_addr_offset = 0;
 
 static BOOL initCalled=__FALSE;
 //default to HEX_FILE type for NRF    
-#if defined(DBG_NRF51822AA)
+#if defined(DBG_NRF5X)
     static FILE_TYPE fileTypeReceived = HEX_FILE;
 #else
     static FILE_TYPE fileTypeReceived = BIN_FILE;
@@ -569,7 +569,7 @@ void init(uint8_t jtag) {
     flash_addr_offset = 0;
     
     //default to HEX_FILE type for NRF
-#if defined(DBG_NRF51822AA)
+#if defined(DBG_NRF5X)
     fileTypeReceived = HEX_FILE;
     intelHexStartData();
 #endif
@@ -732,7 +732,7 @@ int search_bin_file(uint8_t * root, uint8_t sector) {
         if (file_type == BIN_FILE || file_type == PAR_FILE || file_type == HEX_FILE || 
             file_type == DOW_FILE || file_type == CRD_FILE || file_type == SPI_FILE) {
            
-            #if defined(DBG_NRF51822AA)
+            #if defined(DBG_NRF5X)
                 if(file_type == PAR_FILE ||  file_type == CRD_FILE){
                     file_type = HEX_FILE;
                 }            
@@ -1102,7 +1102,7 @@ static int programHEXPage()
 }
 
 static int programPage() {    
-#ifdef BOARD_NRF51822AA
+#ifdef BOARD_NRF5X
     uint32_t fill_usb_buffer_counter;
 #endif
     //The timeout task's timer is resetted every 256kB that is flashed.
@@ -1116,8 +1116,8 @@ static int programPage() {
     }
     else
     {
-#ifdef BOARD_NRF51822AA
-        // is board if NRF51822, fill usb_buffer with FFs instead of zeros at the end of page
+#ifdef BOARD_NRF5X
+        // is board if NRF51 or 52, fill usb_buffer with FFs instead of zeros at the end of page
         if ( (size-flashPtr) < FLASH_PROGRAM_PAGE_SIZE) // If data in USB_buffer does not fill up page_size
         { // Append FFs to the end of the buffer
             for(fill_usb_buffer_counter = ( (size%FLASH_PROGRAM_PAGE_SIZE)/4 ); fill_usb_buffer_counter < 128; fill_usb_buffer_counter++)

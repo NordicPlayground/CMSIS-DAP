@@ -23,6 +23,7 @@ uint8_t swd_read_dp(uint8_t adr, uint32_t *val);
 uint8_t swd_write_dp(uint8_t adr, uint32_t val);
 uint8_t swd_read_ap(uint32_t adr, uint32_t *val);
 uint8_t swd_write_ap(uint32_t adr, uint32_t val);
+uint8_t swd_write_word(uint32_t addr, uint32_t val);
 uint8_t swd_read_memory(uint32_t address, uint8_t *data, uint32_t size);
 uint8_t swd_write_memory(uint32_t address, uint8_t *data, uint32_t size);
 void swd_set_target_reset(uint8_t asserted);

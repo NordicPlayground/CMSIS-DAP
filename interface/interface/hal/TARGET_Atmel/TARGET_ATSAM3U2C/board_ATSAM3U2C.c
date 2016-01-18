@@ -19,6 +19,7 @@
 
 #define BOARD_ID_NRF51_DK "1100"
 #define BOARD_ID_NRF51_Dongle "1120"
+#define BOARD_ID_NRF52_DK "1101"
 
 void set_correct_board_id(void) {
   // Work around for setting the correct board id based on GPIOs.
@@ -53,6 +54,13 @@ void set_correct_board_id(void) {
     *(ptr++) = BOARD_ID_NRF51_Dongle[1];
     *(ptr++) = BOARD_ID_NRF51_Dongle[2];
     *(ptr++) = BOARD_ID_NRF51_Dongle[3];
+  }
+  else if (bit2 && !bit1) {
+    ptr = (uint8_t*)(&(board.id)); // Trick to avoid const of board.id
+    *(ptr++) = BOARD_ID_NRF52_DK[0];
+    *(ptr++) = BOARD_ID_NRF52_DK[1];
+    *(ptr++) = BOARD_ID_NRF52_DK[2];
+    *(ptr++) = BOARD_ID_NRF52_DK[3];  
   }
   else { //mkit
     // board.id already set

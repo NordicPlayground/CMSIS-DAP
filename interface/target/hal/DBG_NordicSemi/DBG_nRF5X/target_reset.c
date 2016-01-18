@@ -62,6 +62,10 @@ static void blinkLED(){
 
 //Erase NRF and blink every 50ms in the process
 static void nrf_Emergency_Erase(){
+    uint32_t ap_index_return;
+    uint32_t ap_eraseall_status;
+    uint32_t i;
+    
     //make sure SWD is initialized
     if (!swd_init_debug()) {
 		return;
@@ -69,41 +73,88 @@ static void nrf_Emergency_Erase(){
     
     blinkLED();    
     
-    //Set NVMC->CONFIG on NRF to 2    
-    if (!swd_write_ap(AP_TAR, 0x4001E000 + 0x504)) {
-		return;
-	}
-    if (!swd_write_ap(AP_DRW, 2)) {
-		return;
-	}
+    // Check if device is nRF52 with CTRL-AP
+    if (!swd_read_ap(0x010000FC, &ap_index_return)) {
+        return;
+    }
+    if (ap_index_return == 0x02880000) {
+        // Device has CTRL-AP
+        
+        // Perform eraseall through CTRL-AP
+        if (!swd_write_ap(0x01000004, 1)) {
+            return;
+        }
+        
+        // Wait 500ms and blink LED of ATSAM
+        blinkLED();
+        blinkLED();
+        blinkLED();
+        blinkLED();
+        blinkLED();
+        
+        // Readback eraseall status, if not finished, wait and flash LEDs
+        for (i = 0; i < 20; i++) {
+            if (!swd_read_ap(0x01000008, &ap_eraseall_status)) {
+                return;
+            }
+            if (ap_eraseall_status == 0) {
+                break;
+            }
+            blinkLED();
+            blinkLED();
+            blinkLED();
+            blinkLED();
+            blinkLED();
+        }
+        
+        // Reset eraseall register
+        if (!swd_write_ap(0x01000004, 0)) {
+            return;
+        }
+        
+        blinkLED();
+        blinkLED();
+    }
+    else {
+        // No CTRL-AP present
+        
+        // Perform normal eraseall
+        //Set NVMC->CONFIG on NRF to 2    
+        if (!swd_write_ap(AP_TAR, 0x4001E000 + 0x504)) {
+            return;
+        }
+        if (!swd_write_ap(AP_DRW, 2)) {
+            return;
+        }
 
-    blinkLED();
-    blinkLED();
-   
+        blinkLED();
+        blinkLED();
+       
 
-    //Set NVMC->ERASEALL on NRF to 1 to start chip erase
-    if (!swd_write_ap(AP_TAR, 0x4001E000 + 0x50C)) {
-		return;
-	}
-    if (!swd_write_ap(AP_DRW, 1)) {
-		return;
-	}
-    
-    blinkLED();
-    blinkLED();
-    blinkLED();
-    blinkLED();
-    
-    //Set NVMC->CONFIG on NRF to 0
-    if (!swd_write_ap(AP_TAR, 0x4001E000 + 0x504)) {
-		return;
-	}
-    if (!swd_write_ap(AP_DRW, 0)) {
-		return;
-	}
-    
-    blinkLED();
-    blinkLED();
+        //Set NVMC->ERASEALL on NRF to 1 to start chip erase
+        if (!swd_write_ap(AP_TAR, 0x4001E000 + 0x50C)) {
+            return;
+        }
+        if (!swd_write_ap(AP_DRW, 1)) {
+            return;
+        }
+        
+        blinkLED();
+        blinkLED();
+        blinkLED();
+        blinkLED();
+        
+        //Set NVMC->CONFIG on NRF to 0
+        if (!swd_write_ap(AP_TAR, 0x4001E000 + 0x504)) {
+            return;
+        }
+        if (!swd_write_ap(AP_DRW, 0)) {
+            return;
+        }
+        
+        blinkLED();
+        blinkLED();
+    }
 
 	//swd_set_target_state(RESET_PROGRAM);
 	//target_flash_init(SystemCoreClock);

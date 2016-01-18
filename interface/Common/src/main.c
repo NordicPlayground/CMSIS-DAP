@@ -330,7 +330,7 @@ __task void main_task(void) {
     //target_set_state(RESET_RUN_WITH_DEBUG);
 #endif
 
-#ifdef BOARD_NRF51822AA
+#ifdef BOARD_NRF5X
     // Target running
     target_set_state(RESET_RUN);
 #endif

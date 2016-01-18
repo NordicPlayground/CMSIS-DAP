@@ -299,7 +299,7 @@ BOOL intelHexReadData(uint8_t *hexData, uint32_t hexDataSize, uint32_t *hexDataB
                 case REC_SRT_LIN: //05
                     //NRF application start address can be non-zero (e.g. 0x1C000000) when softdevice is used
                     //For LPC17XX, uVision appears to use the address of main() instead of address zero. 
-#if (!defined(DBG_LPC1768) && !defined(DBG_NRF51822AA))
+#if (!defined(DBG_LPC1768) && !defined(DBG_NRF5X))
                     //Others must start from address zero
                     if ( (recordData[4]!=0x00) || (recordData[5]!=0x00) ||(recordData[6]!=0x00) ||(recordData[7]!=0x00))
                     {

@@ -23,9 +23,10 @@
 #include "system_SAM3U.h"
 #include <debug_cm.h>
 #include <RTL.h>
+#include "board.h"
 
-#define FLASH_SECTOR_SIZE                  (1024)
-#define TARGET_AUTO_INCREMENT_PAGE_SIZE    (1024)
+#define FLASH_SECTOR_SIZE                  (4096)  //(1024)
+#define TARGET_AUTO_INCREMENT_PAGE_SIZE    (4096)  //(1024)
 
 static uint8_t target_flash_init(uint32_t clk);
 static uint8_t target_flash_uninit(void);
@@ -46,7 +47,18 @@ static const uint32_t nRF51822AA_FLM[] = {
     /*0x0E0*/ 0x0, 
 };
 
-static const TARGET_FLASH flash = {
+static const uint32_t nRF52832AA_FLM[] = {
+    0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,
+    0x47702000, 0x47702000, 0x4c2bb570, 0x60202002, 0x20014929, 0x60083108, 0x68284d28, 0xd00207c0, 
+    0x60202000, 0xf000bd70, 0xe7f6f833, 0x4c22b570, 0x60212102, 0x2f10f1b0, 0x491fd303, 0x31102001, 
+    0x491de001, 0x60081d09, 0xf0004d1c, 0x6828f821, 0xd0fa07c0, 0x60202000, 0xe92dbd70, 0xf8df41f0, 
+    0x088e8058, 0x46142101, 0xf8c84605, 0x4f131000, 0xc501cc01, 0x07c06838, 0x1e76d007, 0x2100d1f8, 
+    0x1000f8c8, 0xe8bd4608, 0xf00081f0, 0xe7f1f801, 0x6800480b, 0x00fff010, 0x490ad00c, 0x29006809, 
+    0x4908d008, 0x31fc4a08, 0xd00007c3, 0x1d09600a, 0xd1f90840, 0x00004770, 0x4001e504, 0x4001e400, 
+    0x40010404, 0x40010504, 0x6e524635, 0x00000000, 
+};
+
+static const TARGET_FLASH flash_nrf51 = {
     0x20000021, // Init
     0x20000025, // UnInit
     0x20000029, // EraseChip
@@ -68,7 +80,45 @@ static const TARGET_FLASH flash = {
     512                       // ram_to_flash_bytes_to_be_written
 };
 
+static const TARGET_FLASH flash_nrf52 = {
+//    0x20000021, // Init
+//    0x20000025, // UnInit
+//    0x20000029, // EraseChip
+//    0x20000049, // EraseSector
+//    0x20000071, // ProgramPage
+    
+    0x20000021, // Init
+    0x20000025, // UnInit
+    0x20000029, // EraseChip
+    0x2000004D, // EraseSector
+    0x2000007B, // ProgramPage
+
+    // RSB : base adreess is address of Execution Region PrgData in map file
+    //       to access global/static data
+    // RSP : Initial stack pointer
+    {
+      0x20000001,             // breakpoint location
+      0x20000020+0x00000150,  // static_base
+      0x20001000              // stack_pointer
+    },
+    0x20000200,               // program_buffer
+    0x20000000,               // algo_start
+    0x00000150,               // algo_size
+    nRF52832AA_FLM,           // image
+    512                       // ram_to_flash_bytes_to_be_written
+};
+
+static TARGET_FLASH flash;
+
 static uint8_t target_flash_init(uint32_t clk) {
+    uint8_t nrf52_dk_is_used = (board.id[3] == '1') ? 1 : 0;  // ID 1101 is the nrf52-dk
+    if (nrf52_dk_is_used) {
+        flash = flash_nrf52;
+    }
+    else {
+        flash = flash_nrf51;
+    }
+    
     // Download flash programming algorithm to target and initialise.
     if (!swd_write_memory(flash.algo_start, (uint8_t *)flash.image, flash.algo_size)) {
         return 0;

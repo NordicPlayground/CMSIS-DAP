@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="project_proj.xsd">
+<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="project_projx.xsd">
 
-  <SchemaVersion>1.1</SchemaVersion>
+  <SchemaVersion>2.1</SchemaVersion>
 
   <Header>### uVision Project, (C) Keil Software</Header>
 
   <Targets>
     <Target>
-      <TargetName>ATSAM3U2C_nRF51822AA_if</TargetName>
+      <TargetName>ATSAM3U2C_nRF5X_if</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
@@ -16,7 +16,7 @@
           <Vendor>Atmel</Vendor>
           <PackID>Keil.SAM3_DFP.1.0.1</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
-          <Cpu>IROM(0x00080000,0x20000) IRAM(0x20000000,0x4000) IRAM2(0x20080000,0x4000) CPUTYPE("Cortex-M3") CLOCK(96000000) ELITTLE</Cpu>
+          <Cpu>IROM(0x00080000,0x20000) IRAM(0x20000000,0x4000) IRAM2(0x20080000,0x4000) CPUTYPE("Cortex-M3") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
           <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0ATSAM3U_128 -FS080000 -FL020000 -FP0($$Device:ATSAM3U2C$Flash\ATSAM3U_128.FLM))</FlashDriverDll>
@@ -47,7 +47,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\</OutputDirectory>
-          <OutputName>ATSAM3U2C_nRF51822AA_if_mbed</OutputName>
+          <OutputName>ATSAM3U2C_nRF5X_if_mbed</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
@@ -145,7 +145,6 @@
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>1</RestoreTracepoints>
             <RestoreSysVw>1</RestoreSysVw>
-            <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
           <TargetSelection>6</TargetSelection>
@@ -176,7 +175,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -229,7 +228,7 @@
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <RoSelD>3</RoSelD>
-            <RwSelD>5</RwSelD>
+            <RwSelD>3</RwSelD>
             <CodeSel>0</CodeSel>
             <OptFeed>0</OptFeed>
             <NoZi1>0</NoZi1>
@@ -246,7 +245,7 @@
             <Ra2Chk>0</Ra2Chk>
             <Ra3Chk>0</Ra3Chk>
             <Im1Chk>1</Im1Chk>
-            <Im2Chk>1</Im2Chk>
+            <Im2Chk>0</Im2Chk>
             <OnChipMemories>
               <Ocm1>
                 <Type>0</Type>
@@ -310,7 +309,7 @@
               </OCR_RVCT3>
               <OCR_RVCT4>
                 <Type>1</Type>
-                <StartAddress>0x0</StartAddress>
+                <StartAddress>0x80000</StartAddress>
                 <Size>0x20000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
@@ -335,8 +334,8 @@
               </OCR_RVCT8>
               <OCR_RVCT9>
                 <Type>0</Type>
-                <StartAddress>0x20000200</StartAddress>
-                <Size>0x3e00</Size>
+                <StartAddress>0x20000000</StartAddress>
+                <Size>0x4000</Size>
               </OCR_RVCT9>
               <OCR_RVCT10>
                 <Type>0</Type>
@@ -364,9 +363,9 @@
             <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>TARGET_ATSAM3U2C, __RTX, DBG_NRF51822AA, BOARD_NRF51822AA</Define>
+              <Define>TARGET_ATSAM3U2C, __RTX, BOARD_NRF5X, DBG_NRF5X</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\shared\USBStack\INC;..\..\Common\inc;..\..\Common\src;..\..\target\hal\DBG_NordicSemi\DBG_nRF51822AA;..\..\interface\hal\TARGET_Atmel\TARGET_ATSAM3U2C;..\..\interface\cmsis;..\..\..\shared\cmsis\TARGET_Atmel\TARGET_ATSAM3U2C;..\..\..\shared\rtos</IncludePath>
+              <IncludePath>..\..\..\shared\USBStack\INC;..\..\Common\inc;..\..\Common\src;..\..\target\hal\DBG_NordicSemi\DBG_nRF5X;..\..\interface\hal\TARGET_Atmel\TARGET_ATSAM3U2C;..\..\interface\cmsis;..\..\..\shared\cmsis\TARGET_Atmel\TARGET_ATSAM3U2C;..\..\..\shared\rtos</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -686,7 +685,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NordicSemi\DBG_nRF51822AA\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NordicSemi\DBG_nRF5X\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -944,36 +943,38 @@
       </Groups>
     </Target>
     <Target>
-      <TargetName>ATSAM3U2C_nRF51822AA_if_mbed_bootloader</TargetName>
+      <TargetName>ATSAM3U2C_nRF5X_if_mbed_bootloader</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
         <TargetCommonOption>
-          <Device>SAM3U2C</Device>
+          <Device>ATSAM3U2C</Device>
           <Vendor>Atmel</Vendor>
-          <Cpu>IRAM(0x20000000-0x20003FFF) IRAM2(0x20080000-0x20083FFF) IROM(0x00080000-0x0009FFFF) CLOCK(12000000) CPUTYPE("Cortex-M3")</Cpu>
+          <PackID>Keil.SAM3_DFP.1.0.1</PackID>
+          <PackURL>http://www.keil.com/pack/</PackURL>
+          <Cpu>IROM(0x00080000,0x20000) IRAM(0x20000000,0x4000) IRAM2(0x20080000,0x4000) CPUTYPE("Cortex-M3") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
-          <StartupFile>"Startup\Atmel\SAM3U\startup_SAM3U.s" ("Atmel SAM3U Startup Code")</StartupFile>
-          <FlashDriverDll>UL2CM3(-O902 -S0 -C0 -FO7 -FD20000000 -FC800 -FN1 -FF0ATSAM3U_128 -FS080000 -FL020000)</FlashDriverDll>
-          <DeviceId>4902</DeviceId>
-          <RegisterFile>sam3u.h</RegisterFile>
+          <StartupFile></StartupFile>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0ATSAM3U_128 -FS080000 -FL020000 -FP0($$Device:ATSAM3U2C$Flash\ATSAM3U_128.FLM))</FlashDriverDll>
+          <DeviceId>0</DeviceId>
+          <RegisterFile>$$Device:ATSAM3U2C$Device\Include\SAM3U\sam3u.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
           <Asm></Asm>
           <Linker></Linker>
           <OHString></OHString>
           <InfinionOptionDll></InfinionOptionDll>
-          <SLE66CMisc>-D__SAM3U2C__</SLE66CMisc>
+          <SLE66CMisc></SLE66CMisc>
           <SLE66AMisc></SLE66AMisc>
           <SLE66LinkerMisc></SLE66LinkerMisc>
-          <SFDFile>SFD\Atmel\SAM3U\SAM3U2C.sfr</SFDFile>
+          <SFDFile>$$Device:ATSAM3U2C$SVD\SAM3U\SAM3U2C.svd</SFDFile>
           <bCustSvd>0</bCustSvd>
           <UseEnv>0</UseEnv>
           <BinPath></BinPath>
           <IncludePath></IncludePath>
           <LibPath></LibPath>
-          <RegisterFilePath>Atmel\SAM3U\</RegisterFilePath>
-          <DBRegisterFilePath>Atmel\SAM3U\</DBRegisterFilePath>
+          <RegisterFilePath></RegisterFilePath>
+          <DBRegisterFilePath></DBRegisterFilePath>
           <TargetStatus>
             <Error>0</Error>
             <ExitCodeStop>0</ExitCodeStop>
@@ -982,7 +983,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Obj\</OutputDirectory>
-          <OutputName>ATSAM3U2C_nRF51822AA_if_mbed_bootloader</OutputName>
+          <OutputName>ATSAM3U2C_nRF5X_if_mbed_bootloader</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
@@ -1041,13 +1042,13 @@
         </CommonProperty>
         <DllOption>
           <SimDllName>SARMCM3.DLL</SimDllName>
-          <SimDllArguments>-MPU</SimDllArguments>
-          <SimDlgDll>DARMSAM3.DLL</SimDlgDll>
-          <SimDlgDllArguments>-pSAM3U2C</SimDlgDllArguments>
+          <SimDllArguments> -REMAP -MPU</SimDllArguments>
+          <SimDlgDll>DCM.DLL</SimDlgDll>
+          <SimDlgDllArguments>-pCM3</SimDlgDllArguments>
           <TargetDllName>SARMCM3.DLL</TargetDllName>
-          <TargetDllArguments>-MPU</TargetDllArguments>
-          <TargetDlgDll>TARMSAM3.DLL</TargetDlgDll>
-          <TargetDlgDllArguments>-pSAM3U2C</TargetDlgDllArguments>
+          <TargetDllArguments> -MPU</TargetDllArguments>
+          <TargetDlgDll>TCM.DLL</TargetDlgDll>
+          <TargetDlgDllArguments>-pCM3</TargetDlgDllArguments>
         </DllOption>
         <DebugOption>
           <OPTHX>
@@ -1080,7 +1081,6 @@
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>1</RestoreTracepoints>
             <RestoreSysVw>1</RestoreSysVw>
-            <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
           <TargetSelection>6</TargetSelection>
@@ -1111,7 +1111,7 @@
           </Flash1>
           <bUseTDR>0</bUseTDR>
           <Flash2>Segger\JL2CM3.dll</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -1245,7 +1245,7 @@
               </OCR_RVCT3>
               <OCR_RVCT4>
                 <Type>1</Type>
-                <StartAddress>0x0</StartAddress>
+                <StartAddress>0x80000</StartAddress>
                 <Size>0x20000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
@@ -1299,9 +1299,9 @@
             <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>TARGET_ATSAM3U2C, __RTX, DBG_NRF51822AA, BOARD_NRF51822AA</Define>
+              <Define>TARGET_ATSAM3U2C, __RTX, DBG_NRF5X, BOARD_NRF5X</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\shared\USBStack\INC;..\..\Common\inc;..\..\Common\src;..\..\target\hal\DBG_NordicSemi\DBG_nRF51822AA;..\..\interface\hal\TARGET_Atmel\TARGET_ATSAM3U2C;..\..\interface\cmsis;..\..\..\shared\cmsis\TARGET_Atmel\TARGET_ATSAM3U2C;..\..\..\shared\rtos;..\..\..\..\Common\inc</IncludePath>
+              <IncludePath>..\..\..\shared\USBStack\INC;..\..\Common\inc;..\..\Common\src;..\..\target\hal\DBG_NordicSemi\DBG_nRF5X;..\..\interface\hal\TARGET_Atmel\TARGET_ATSAM3U2C;..\..\interface\cmsis;..\..\..\shared\cmsis\TARGET_Atmel\TARGET_ATSAM3U2C;..\..\..\shared\rtos;..\..\..\..\Common\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1578,7 +1578,7 @@
             <File>
               <FileName>target_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\target\hal\DBG_NordicSemi\DBG_nRF51822AA\target_reset.c</FilePath>
+              <FilePath>..\..\target\hal\DBG_NordicSemi\DBG_nRF5X\target_reset.c</FilePath>
             </File>
           </Files>
         </Group>

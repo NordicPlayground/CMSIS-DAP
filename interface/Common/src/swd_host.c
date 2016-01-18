@@ -48,7 +48,7 @@
 // Some targets require a soft reset for flash programming (RESET_PROGRAM).
 // Otherwise a hardware reset is the default. This will not affect
 // DAP operations as they are controlled by the remote debugger.
-#if defined(BOARD_BAMBINO_210) || defined(BOARD_BAMBINO_210E) || defined(BOARD_NRF51822AA)
+#if defined(BOARD_BAMBINO_210) || defined(BOARD_BAMBINO_210E) || defined(BOARD_NRF5X)
 #define CONF_SYSRESETREQ
 #elif defined(BOARD_LPC4337)
 #define CONF_VECTRESET
@@ -355,7 +355,7 @@ static uint8_t swd_read_word(uint32_t addr, uint32_t *val) {
 }
 
 // Write 32-bit word to target memory.
-static uint8_t swd_write_word(uint32_t addr, uint32_t val) {
+uint8_t swd_write_word(uint32_t addr, uint32_t val) {
     if (!swd_write_ap(AP_CSW, CSW_VALUE | CSW_SIZE32)) {
         return 0;
     }
@@ -853,7 +853,7 @@ uint8_t swd_set_target_state(TARGET_RESET_STATE state) {
             }
 
             // Reset again
-            #if defined(DBG_NRF51822AA)
+            #if defined(DBG_NRF5X)
             //SysReset
             swd_write_word(NVIC_AIRCR, VECTKEY | SYSRESETREQ);
             #else                        

@@ -22,6 +22,7 @@
 #include <RTL.h>
 #include <debug_cm.h>
 #include <swd_host.h>
+#include "board.h"
 //**************************************************************************************************
 /**
 \defgroup DAP_Config_Debug_gr CMSIS-DAP Debug Unit Information
@@ -87,7 +88,7 @@ Provides definitions about:
 
 #if TARGET_DEVICE_FIXED
 #define TARGET_DEVICE_VENDOR    "NordicSemi"              ///< String indicating the Silicon Vendor
-#define TARGET_DEVICE_NAME      "nRF51822AA"              ///< String indicating the Target Device
+#define TARGET_DEVICE_NAME      "nRF5X"                   ///< String indicating the Target Device
 #endif
 
 ///@}
@@ -319,32 +320,53 @@ static __forceinline uint32_t PIN_nRESET_IN  (void) {
            - 1: release device hardware reset.
 */
 static __forceinline void     PIN_nRESET_OUT (uint32_t bit) {
-	
- /**There is no reset pin on the nRF51822, so we need to use a reset routine:
-	Enable reset through the RESET register in the POWER peripheral. 
-	Hold the SWDCLK and SWDIO/nRESET line low for a minimum of 100 µs. 
-  */
-  if (bit & 1) {
-      PIOA->PIO_SODR = PIN_SWDIO;
-      PIOA->PIO_MDER = PIN_SWDIO | PIN_SWCLK | PIN_nRESET;
-	} else {
+    uint32_t ap_index_return;
+    uint8_t nrf52_dk_is_used = (board.id[3] == '1') ? 1 : 0;  // ID 1101 is the nrf52-dk
+    
+    if (bit & 1) {
+        PIOA->PIO_SODR = PIN_SWDIO;
+        PIOA->PIO_MDER = PIN_SWDIO | PIN_SWCLK | PIN_nRESET;
+    } 
+    else {
         swd_init_debug();
-        //Set POWER->RESET on NRF to 1
-        if(!swd_write_ap(AP_TAR, 0x40000000 + 0x544)){
-            return;
-        }
         
-		if(!swd_write_ap(AP_DRW, 1)){
-            return;
+        if (nrf52_dk_is_used) {
+            swd_read_ap(0x010000FC, &ap_index_return);
+            if (ap_index_return == 0x02880000) {
+                // Device has CTRL-AP
+                swd_write_ap(0x01000000, 1);  // CTRL-AP reset hold
+                os_dly_wait(1);
+                swd_write_ap(0x01000000, 0);  // CTRL-AP reset release
+            }
+            else {
+                // No CTRL-AP
+                // Perform a soft reset
+                swd_write_word(0xE000ED0C /* NVIC_AIRCR */, 0x05FA0000 /* VECTKEY */ | 0x4 /* SYSRESETREQ */);
+                os_dly_wait(1);
+            }
         }
-        
-        //Hold RESET and SWCLK low for a minimum of 100us
-        PIOA->PIO_OER = PIN_SWDIO;
-        PIOA->PIO_OER = PIN_SWCLK;     
-        PIOA->PIO_CODR = PIN_SWDIO;
-        PIOA->PIO_CODR = PIN_SWCLK;
-        os_dly_wait(1);
-	}
+        else {  // nrf51 devkits
+            /**There is no reset pin on the nRF51822, so we need to use a reset routine:
+                Enable reset through the RESET register in the POWER peripheral. 
+                Hold the SWDCLK and SWDIO/nRESET line low for a minimum of 100 µs. 
+              */
+            //Set POWER->RESET on NRF to 1
+            if(!swd_write_ap(AP_TAR, 0x40000000 + 0x544)){
+                return;
+            }
+            
+            if(!swd_write_ap(AP_DRW, 1)){
+                return;
+            }
+            
+            //Hold RESET and SWCLK low for a minimum of 100us
+            PIOA->PIO_OER = PIN_SWDIO;
+            PIOA->PIO_OER = PIN_SWCLK;     
+            PIOA->PIO_CODR = PIN_SWDIO;
+            PIOA->PIO_CODR = PIN_SWCLK;
+            os_dly_wait(1);
+        }
+    }
 }
 
 ///@}
