@@ -110,7 +110,6 @@ class FlashInfo(object):
 
 
 def gen_flash_algo():
-    print [FROMELF, '--bin', ALGO_ELF_PATH, '-o', TMP_DIR_W_TERM]
     run_cmd([FROMELF, '--bin', ALGO_ELF_PATH, '-o', TMP_DIR_W_TERM])
     try:
         flash_info = FlashInfo(DEV_INFO_PATH)

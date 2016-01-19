@@ -81,12 +81,6 @@ static const TARGET_FLASH flash_nrf51 = {
 };
 
 static const TARGET_FLASH flash_nrf52 = {
-//    0x20000021, // Init
-//    0x20000025, // UnInit
-//    0x20000029, // EraseChip
-//    0x20000049, // EraseSector
-//    0x20000071, // ProgramPage
-    
     0x20000021, // Init
     0x20000025, // UnInit
     0x20000029, // EraseChip
