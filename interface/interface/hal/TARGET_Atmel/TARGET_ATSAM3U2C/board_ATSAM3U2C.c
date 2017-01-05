@@ -20,17 +20,18 @@
 #define BOARD_ID_NRF51_DK "1100"
 #define BOARD_ID_NRF51_Dongle "1120"
 #define BOARD_ID_NRF52_DK "1101"
+#define BOARD_ID_NRF52840_DK "1102"
 
 void set_correct_board_id(void) {
   // Work around for setting the correct board id based on GPIOs.
   uint8_t bit1;
   uint8_t bit2;
-  //uint8_t bit3;
+  uint8_t bit3;
   uint8_t *ptr; // Trick to avoid const of board.id
   
   PIOB->PIO_PER = (1 << 1); // Enable PIO pin PB1
   PIOB->PIO_PER = (1 << 2); // Enable PIO pin PB2
-  PIOB->PIO_PER = (1 << 3); // Enable PIO pin PB2
+  PIOB->PIO_PER = (1 << 3); // Enable PIO pin PB3
   PIOB->PIO_ODR = (1 << 1); // Disabe output
   PIOB->PIO_ODR = (1 << 2); // Disabe output
   PIOB->PIO_ODR = (1 << 3); // Disabe output
@@ -40,27 +41,35 @@ void set_correct_board_id(void) {
   
   bit1 = (PIOB->PIO_PDSR >> 1) & 1; // Read PB1
   bit2 = (PIOB->PIO_PDSR >> 2) & 1; // Read PB2
+  bit3 = (PIOB->PIO_PDSR >> 3) & 1; // Read PB3
   
-  if (!bit2 && bit1) { //NRF51_DK
-    ptr = (uint8_t*)(&(board.id)); // Trick to avoid const of board.id
-    *(ptr++) = BOARD_ID_NRF51_DK[0];
-    *(ptr++) = BOARD_ID_NRF51_DK[1];
-    *(ptr++) = BOARD_ID_NRF51_DK[2];
-    *(ptr++) = BOARD_ID_NRF51_DK[3];
-  }
-  else if (!bit2 && !bit1) { //NRF51_Dongle
+  if (!bit3 && !bit2 && !bit1) { //NRF51_Dongle  0b000
     ptr = (uint8_t*)(&(board.id)); // Trick to avoid const of board.id
     *(ptr++) = BOARD_ID_NRF51_Dongle[0];
     *(ptr++) = BOARD_ID_NRF51_Dongle[1];
     *(ptr++) = BOARD_ID_NRF51_Dongle[2];
     *(ptr++) = BOARD_ID_NRF51_Dongle[3];
   }
-  else if (bit2 && !bit1) {
+  else if (!bit3 && !bit2 && bit1) { //NRF51_DK  0b001
+    ptr = (uint8_t*)(&(board.id)); // Trick to avoid const of board.id
+    *(ptr++) = BOARD_ID_NRF51_DK[0];
+    *(ptr++) = BOARD_ID_NRF51_DK[1];
+    *(ptr++) = BOARD_ID_NRF51_DK[2];
+    *(ptr++) = BOARD_ID_NRF51_DK[3];
+  }
+  else if (!bit3 && bit2 && !bit1) { //NRF52_DK  0b010
     ptr = (uint8_t*)(&(board.id)); // Trick to avoid const of board.id
     *(ptr++) = BOARD_ID_NRF52_DK[0];
     *(ptr++) = BOARD_ID_NRF52_DK[1];
     *(ptr++) = BOARD_ID_NRF52_DK[2];
     *(ptr++) = BOARD_ID_NRF52_DK[3];  
+  }
+  else if (!bit3 && bit2 && bit1) { //NRF52840_DK  0b011
+    ptr = (uint8_t*)(&(board.id)); // Trick to avoid const of board.id
+    *(ptr++) = BOARD_ID_NRF52840_DK[0];
+    *(ptr++) = BOARD_ID_NRF52840_DK[1];
+    *(ptr++) = BOARD_ID_NRF52840_DK[2];
+    *(ptr++) = BOARD_ID_NRF52840_DK[3];  
   }
   else { //mkit
     // board.id already set
