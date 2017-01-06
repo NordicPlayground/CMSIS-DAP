@@ -19,7 +19,7 @@
 #include <stdint.h>
 
 #ifdef TARGET_ATSAM3U2C
-#define FW_BUILD "0219"
+#define FW_BUILD "0220"
 #else 
 #define FW_BUILD "0203"
 #endif
