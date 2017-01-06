@@ -25,6 +25,9 @@
 #include <RTL.h>
 #include "board.h"
 
+#define FLASH_SECTOR_SIZE_NRF51            (1024)
+
+/* Problems of defining a sector bigger than it actually is only affects erase sector. See erase sector function for solution. */
 #define FLASH_SECTOR_SIZE                  (4096)  //(1024)
 #define TARGET_AUTO_INCREMENT_PAGE_SIZE    (4096)  //(1024)
 
@@ -107,10 +110,8 @@ static TARGET_FLASH flash;
 
 static uint8_t target_flash_init(uint32_t clk) {
     
-    if ((board.id[0] == '1') && (board.id[1] == '1') && (board.id[2] == '0') && (board.id[3] == '1')){
-        flash = flash_nrf52;
-    }
-    else if ((board.id[0] == '1') && (board.id[1] == '1') && (board.id[2] == '0') && (board.id[3] == '2')){
+    if (((board.id[0] == '1') && (board.id[1] == '1') && (board.id[2] == '0') && (board.id[3] == '1')) ||
+        ((board.id[0] == '1') && (board.id[1] == '1') && (board.id[2] == '0') && (board.id[3] == '2'))){
         flash = flash_nrf52;
     }
     else {
@@ -130,10 +131,28 @@ static uint8_t target_flash_init(uint32_t clk) {
 }
 
 static uint8_t target_flash_erase_sector(unsigned int sector) {
+    
+    uint32_t i;
+    
     if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_sector, sector*FLASH_SECTOR_SIZE, 0, 0, 0)) {
         return 0;
     }
 
+    /* Since the sector size in 52 is as defined, we are finished. */
+    
+    if (((board.id[0] == '1') && (board.id[1] == '1') && (board.id[2] == '0') && (board.id[3] == '1')) ||
+        ((board.id[0] == '1') && (board.id[1] == '1') && (board.id[2] == '0') && (board.id[3] == '2'))){
+        return 1;
+    }
+       
+    /* Since the sector size in 51 is smaller, we need to use this trick to erase what embed thinks is a sector. This is a hack. */
+    for (i = 1; i <=3; i++){
+    
+        if (!swd_flash_syscall_exec(&flash.sys_call_param, flash.erase_sector, sector*FLASH_SECTOR_SIZE + i*FLASH_SECTOR_SIZE_NRF51, 0, 0, 0)) {
+            return 0;
+        }
+    }
+    
     return 1;
 }
 
