@@ -34,7 +34,7 @@ static uint8_t target_flash_erase_chip(void);
 static uint8_t target_flash_erase_sector(uint32_t adr);
 static uint8_t target_flash_program_page(uint32_t adr, uint8_t * buf, uint32_t size);
 
-
+/* Common algorithm for all nRF51 devices. */
 static const uint32_t nRF51822AA_FLM[] = {
     0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,
 
@@ -47,7 +47,8 @@ static const uint32_t nRF51822AA_FLM[] = {
     /*0x0E0*/ 0x0, 
 };
 
-static const uint32_t nRF52832AA_FLM[] = {
+/* Common algorithm for nRF52832 and nRF52840. */
+static const uint32_t nRF52_FLM[] = {
     0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,
     0x47702000, 0x47702000, 0x4c2bb570, 0x60202002, 0x20014929, 0x60083108, 0x68284d28, 0xd00207c0, 
     0x60202000, 0xf000bd70, 0xe7f6f833, 0x4c22b570, 0x60212102, 0x2f10f1b0, 0x491fd303, 0x31102001, 
@@ -98,15 +99,18 @@ static const TARGET_FLASH flash_nrf52 = {
     0x20000200,               // program_buffer
     0x20000000,               // algo_start
     0x00000150,               // algo_size
-    nRF52832AA_FLM,           // image
+    nRF52_FLM,                // image
     512                       // ram_to_flash_bytes_to_be_written
 };
 
 static TARGET_FLASH flash;
 
 static uint8_t target_flash_init(uint32_t clk) {
-    uint8_t nrf52_dk_is_used = (board.id[3] == '1') ? 1 : 0;  // ID 1101 is the nrf52-dk
-    if (nrf52_dk_is_used) {
+    
+    if ((board.id[0] == '1') && (board.id[1] == '1') && (board.id[2] == '0') && (board.id[3] == '1')){
+        flash = flash_nrf52;
+    }
+    else if ((board.id[0] == '1') && (board.id[1] == '1') && (board.id[2] == '0') && (board.id[3] == '2')){
         flash = flash_nrf52;
     }
     else {

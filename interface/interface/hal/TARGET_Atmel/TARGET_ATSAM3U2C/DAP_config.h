@@ -321,7 +321,6 @@ static __forceinline uint32_t PIN_nRESET_IN  (void) {
 */
 static __forceinline void     PIN_nRESET_OUT (uint32_t bit) {
     uint32_t ap_index_return;
-    uint8_t nrf52_dk_is_used = (board.id[3] == '1') ? 1 : 0;  // ID 1101 is the nrf52-dk
     
     if (bit & 1) {
         PIOA->PIO_SODR = PIN_SWDIO;
@@ -330,7 +329,9 @@ static __forceinline void     PIN_nRESET_OUT (uint32_t bit) {
     else {
         swd_init_debug();
         
-        if (nrf52_dk_is_used) {
+        if (((board.id[0] == '1') && (board.id[1] == '1') && (board.id[2] == '0') && (board.id[3] == '1')) || 
+            ((board.id[0] == '1') && (board.id[1] == '1') && (board.id[2] == '0') && (board.id[3] == '2'))) {
+            
             swd_read_ap(0x010000FC, &ap_index_return);
             if (ap_index_return == 0x02880000) {
                 // Device has CTRL-AP
